@@ -23,21 +23,33 @@ void observer_demo() {
   she.up_account();
 
   using namespace std::chrono_literals;
-  Timer t{1000ms};
+  Timer t{1s};
   t.attach(me);
   t.run();
 
-  Timer t1{100'000'000ns};
+  Timer t1{1s};
   t1.attach(teacher);
   t1.attach(me);
   t1.run();
+  // Blocks main thread
+  while (true) {
+  }
+}
 
-  // Blocks timers
+void timer_thread_test() {
+  Timer_thread t{
+      std::chrono::nanoseconds{100'000'000}, []() {
+        auto now{std::chrono::steady_clock::now().time_since_epoch().count()};
+        std::cout << "Tick. It's " << now << " since epoch.\n";
+      }};
+  t.start();
+  // Blocks main thread
   while (true) {
   }
 }
 
 int main() {
-  observer_demo();
+  timer_thread_test();
+  /*observer_demo();*/
   return 0;
 }

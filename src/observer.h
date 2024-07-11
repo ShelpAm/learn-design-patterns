@@ -1,8 +1,7 @@
 #pragma once
+#include "timer_thread.h"
 #include <chrono>
-#include <functional>
 #include <memory>
-#include <thread>
 #include <vector>
 
 class Subject;
@@ -49,24 +48,6 @@ public:
 
 private:
   King_of_glory_player *_subject;
-};
-
-class Timer_thread {
-public:
-  Timer_thread(Timer_thread const &) = delete;
-  Timer_thread(Timer_thread &&) = delete;
-  Timer_thread &operator=(Timer_thread const &) = delete;
-  Timer_thread &operator=(Timer_thread &&) = delete;
-  Timer_thread(std::chrono::nanoseconds period, std::function<void()> function);
-  ~Timer_thread();
-  void start();
-  void stop();
-
-private:
-  std::atomic<bool> _stop;
-  std::thread _thread;
-  std::chrono::nanoseconds _period;
-  std::chrono::time_point<std::chrono::steady_clock> _last_updated;
 };
 
 class Timer : public Subject {
