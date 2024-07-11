@@ -20,15 +20,21 @@ void Subject::detach(std::shared_ptr<Observer> const &observer) {
   });
 }
 
-void King_of_glory_player::do_play() {
+void King_of_glory_player::up_account() {
   _online = true;
   notify();
 }
 
-void King_of_glory_player::do_offline() {
+void King_of_glory_player::down_account() {
   _online = false;
   notify();
 }
+
+bool King_of_glory_player::online() const { return _online; }
+
+Unhappy_to_observe_subject::Unhappy_to_observe_subject(
+    King_of_glory_player const *subject)
+    : _subject(subject) {}
 
 void Unhappy_to_observe_subject::update() {
   std::cout << "Unhappy to observe subject... ";
@@ -44,36 +50,45 @@ Teacher::Teacher(King_of_glory_player *subject) : _subject(subject) {}
 void Teacher::update() {
   if (_subject->online()) {
     std::cout << "Forcing subject to offline.\n";
-    _subject->do_offline();
+    _subject->down_account();
   } else {
     std::cout << "Normal student.\n";
   }
 }
 
-Timer::Timer(std::chrono::milliseconds period)
+Timer_thread::Timer_thread(std::chrono::nanoseconds period,
+                           std::function<void()> &&function)
     : _thread([this]() {
         while (!_stop) {
           auto now{std::chrono::steady_clock::now()};
           auto diff{now - _last_updated};
           if (diff > _period) {
-            notify();
+            _function();
             _last_updated = now;
           }
         }
       }),
-      _last_updated(std::chrono::steady_clock::now()), _period(period) {}
+      _function(std::move(function)), _period(period),
+      _last_updated(std::chrono::steady_clock::now()) {}
 
-Timer::~Timer() {
-  _stop = true;
-  if (_thread.joinable()) {
-    _thread.join();
-  }
-}
+Timer_thread::~Timer_thread() { stop(); }
 
-void Timer::run() {
+void Timer_thread::start() {
   if (_thread.joinable()) {
     _thread.detach();
   } else {
     throw std::runtime_error{"Call Timer::run() more than once."};
   }
 }
+
+void Timer_thread::stop() {
+  _stop = true;
+  if (_thread.joinable()) {
+    _thread.join();
+  }
+}
+
+Timer::Timer(std::chrono::nanoseconds period)
+    : _timer_thread(period, [this] { notify(); }) {}
+
+void Timer::run() { _timer_thread.start(); }

@@ -13,34 +13,29 @@ int main() {
 
   // Observer
   King_of_glory_player she;
-
   auto me{std::make_shared<Unhappy_to_observe_subject>(&she)};
-
   auto teacher{std::make_shared<Teacher>(&she)};
 
   she.attach(teacher);
   /*she.detach(teacher);*/
   she.attach(me);
 
-  she.do_play();
-  she.do_offline();
-  she.do_play();
+  she.up_account();
+  she.down_account();
+  she.up_account();
 
   using namespace std::chrono_literals;
   Timer t{1000ms};
   t.attach(me);
-  t.attach(me);
   t.run();
 
-  Timer t1{100ms};
+  Timer t1{100'000'000ns};
   t1.attach(teacher);
   t1.attach(me);
   t1.run();
 
-  int op{1};
-  while (op != 0) {
-    std::cout << "op is: " << op << '\n';
-    std::cin >> op;
+  // Blocks timers
+  while (true) {
   }
 
   return 0;
