@@ -30,7 +30,7 @@ void King_of_glory_player::down_account() {
   notify();
 }
 
-bool King_of_glory_player::online() const { return _online; }
+auto King_of_glory_player::online() const -> bool { return _online; }
 
 Unhappy_to_observe_subject::Unhappy_to_observe_subject(
     King_of_glory_player const *subject)

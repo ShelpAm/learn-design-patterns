@@ -1,5 +1,6 @@
 #include "factory_method.h"
 #include "observer.h"
+#include <iostream>
 /*#include "spdlog/spdlog.h"*/
 
 void factory_method_demo() {
@@ -48,7 +49,7 @@ void timer_thread_test() {
   }
 }
 
-int main() {
+auto main() -> int {
   timer_thread_test();
   /*observer_demo();*/
   return 0;

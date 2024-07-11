@@ -26,7 +26,7 @@ class King_of_glory_player : public Subject {
 public:
   void up_account();
   void down_account();
-  [[nodiscard]] bool online() const;
+  [[nodiscard]] auto online() const -> bool;
 
 private:
   bool _online{};
