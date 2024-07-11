@@ -57,19 +57,18 @@ void Teacher::update() {
 }
 
 Timer_thread::Timer_thread(std::chrono::nanoseconds period,
-                           std::function<void()> &&function)
-    : _thread([this]() {
+                           std::function<void()> function)
+    : _thread([this, func = std::move(function)]() {
         while (!_stop) {
           auto now{std::chrono::steady_clock::now()};
           auto diff{now - _last_updated};
           if (diff > _period) {
-            _function();
+            func();
             _last_updated = now;
           }
         }
       }),
-      _function(std::move(function)), _period(period),
-      _last_updated(std::chrono::steady_clock::now()) {}
+      _period(period), _last_updated(std::chrono::steady_clock::now()) {}
 
 Timer_thread::~Timer_thread() { stop(); }
 
@@ -77,7 +76,7 @@ void Timer_thread::start() {
   if (_thread.joinable()) {
     _thread.detach();
   } else {
-    throw std::runtime_error{"Call Timer::run() more than once."};
+    throw std::runtime_error{"Timer thread is already running."};
   }
 }
 

@@ -1,17 +1,15 @@
-/*#include "factory_method.h"*/
+#include "factory_method.h"
 #include "observer.h"
-#include <iostream>
-#include <thread>
 /*#include "spdlog/spdlog.h"*/
 
-int main() {
-  // Factory method
-  /*std::unique_ptr<Logistics> logistics{std::make_unique<Road_logistics>()};*/
-  /*logistics->plan_delivery();*/
-  /*logistics = std::make_unique<Sea_logistics>();*/
-  /*logistics->plan_delivery();*/
+void factory_method_demo() {
+  std::unique_ptr<Logistics> logistics{std::make_unique<Road_logistics>()};
+  logistics->plan_delivery();
+  logistics = std::make_unique<Sea_logistics>();
+  logistics->plan_delivery();
+}
 
-  // Observer
+void observer_demo() {
   King_of_glory_player she;
   auto me{std::make_shared<Unhappy_to_observe_subject>(&she)};
   auto teacher{std::make_shared<Teacher>(&she)};
@@ -37,6 +35,9 @@ int main() {
   // Blocks timers
   while (true) {
   }
+}
 
+int main() {
+  observer_demo();
   return 0;
 }

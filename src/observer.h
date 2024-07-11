@@ -44,7 +44,7 @@ private:
 
 class Teacher : public Observer {
 public:
-  Teacher(King_of_glory_player *subject);
+  Teacher(King_of_glory_player *);
   void update() override;
 
 private:
@@ -53,12 +53,11 @@ private:
 
 class Timer_thread {
 public:
-  Timer_thread(const Timer_thread &) = delete;
+  Timer_thread(Timer_thread const &) = delete;
   Timer_thread(Timer_thread &&) = delete;
-  Timer_thread &operator=(const Timer_thread &) = delete;
+  Timer_thread &operator=(Timer_thread const &) = delete;
   Timer_thread &operator=(Timer_thread &&) = delete;
-  Timer_thread(std::chrono::nanoseconds period,
-               std::function<void()> &&function);
+  Timer_thread(std::chrono::nanoseconds period, std::function<void()> function);
   ~Timer_thread();
   void start();
   void stop();
@@ -66,7 +65,6 @@ public:
 private:
   std::atomic<bool> _stop;
   std::thread _thread;
-  std::function<void()> _function;
   std::chrono::nanoseconds _period;
   std::chrono::time_point<std::chrono::steady_clock> _last_updated;
 };
